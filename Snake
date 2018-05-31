@@ -1,0 +1,173 @@
+window.onload=function(){
+ canvas = document.getElementById("Snek");
+ pen = canvas.getContext('2d');
+ document.addEventListener('keydown',keyPush);
+ // run our game in frames per second
+ setInterval(game,1000/15)
+ backgroundimg = new Image()
+ backgroundimg.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4Yu-rsZT5wEUWAF-GJH5AuCq5aDEiSyX0UaKGccS5FvwFhNLQ'
+ playerimg = new Image()
+ playerimg.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQbwRpnLZtZBZC9kzz-Qf0M4ZuKDRjbj2zzJTHvgOfE-gzjYzg'
+ bugimg = new Image()
+ bugimg.src = 'https://cdn.onlinewebfonts.com/svg/img_73768.png'
+};
+// these are all global variables so
+// dont put var
+
+// player x and y position
+player_x = 10;
+player_y = 10;
+
+// create a grid
+gridSize = 20;
+tileCount = 20;
+
+// player dirction
+x_speed=0;
+y_speed=0;
+
+// apple x and y position
+apple_x=15;
+apple_y=15;
+
+// player tail and trail
+trail=[];
+// starting number of peices
+tail = 5
+
+// lifes
+lifes = 3;
+
+// all game logic goes here
+function game(){
+  // update player postion each frames
+  player_x+=x_speed;
+  player_y+=y_speed;
+  
+  // insert the boundaries
+  if(player_x < 0){
+    player_x = tileCount - 1;
+    lifes -=1
+    player_x = 10
+    player_y = 10
+    x_speed = 0
+    y_speed = 0
+    tail = 5
+    
+  }
+  if(player_x > tileCount - 1){
+    player_x = 0;
+    lifes -= 1
+    player_x = 10
+    player_y = 10
+    x_speed = 0
+    y_speed = 0
+    tail = 5
+  } 
+  if(player_y < 0){
+    player_y = tileCount - 1;
+    lifes -= 1
+    player_x = 10
+    player_y = 10
+    x_speed = 0
+    y_speed = 0
+    tail = 5
+  }
+  if(player_y > tileCount - 1){
+    player_y = 0
+    lifes -= 1
+    player_x = 10
+    player_y = 10
+    x_speed = 0
+    y_speed = 0
+    tail = 5
+    
+  }
+  
+  // draw black background
+  pen.fillStyle='black';
+  pen.drawImage(backgroundimg,0,0,canvas.width,canvas.height);
+    
+  // draw our snak plyaer here
+  for(var i=0;i<trail.length;i++){
+    pen.fillStyle='blue'
+    pen.drawImage(playerimg,trail[i].x*gridSize, trail[i].y*gridSize,gridSize-2,gridSize-2);
+    if(trail[i].x==player_x && trail[i].y==player_y){
+      tail = 5;
+      if(x_speed != 9 && y_speed != 0){
+        lifes -= 1
+        player_x = 10
+        player_y = 10
+        x_speed = 0
+        y_speed = 0
+      }
+      
+      }
+    }
+  // add to snake player here
+  trail.push({x:player_x,y:player_y});
+  
+  // this trims down the trail of the snake if it exceeds the actuall length
+  while(trail.length>tail){
+    trail.shift();
+    }
+    
+  
+  //detect collistion of the apple
+  if(apple_x == player_x && apple_y == player_y){
+    tail++;
+    apple_x = Math.floor(Math.random()*tileCount);
+    apple_y = Math.floor(Math.random()*tileCount);
+  }
+  
+  // draw the apple
+  pen.fillStyle='red';
+  pen.drawImage(bugimg,apple_x*gridSize,apple_y*gridSize,gridSize,gridSize);
+  
+  // drawing and controlling lifes
+  pen.font= "30px Comic Sans MS";
+  pen.textBaseline="middle";
+  pen.textAlign="center";
+  pen.fillStyle="Red";
+  pen.fillText('Lifes '+lifes, 70, 50)
+  
+  // Game over screen
+  if(lifes <= 0){
+    pen.fillStyle='black';
+    pen.fillRect(0,0,canvas.width,canvas.height);
+    pen.font= "30px Comic Sans MS";
+    pen.textBaseline="middle";
+    pen.textAlign="center";
+    pen.fillStyle="Red";
+    pen.fillText('Game Over', 200, 200)
+  
+  // 
+    
+  }
+
+}
+
+function keyPush(evt){
+  switch(evt.keyCode){
+    case 37: // left arrow
+      if(x_speed < 1){
+      x_speed = -1;
+      y_speed = 0;}
+      break;
+    case 38: // up arrow
+      if(y_speed < 1){
+      x_speed = 0;
+      y_speed = -1;}
+      break;
+    case 39: // right arrow
+      if(x_speed > -1){
+      x_speed = 1;
+      y_speed = 0;}
+      break;
+    case 40: // down arrow
+      if(y_speed > -1){
+      x_speed = 0;
+      y_speed = 1;}
+      break;
+  }
+}
