@@ -1,0 +1,10 @@
+function computeFactorialOfN(n) {
+  a = []
+  for(i=1;i<=n;i++){
+    a.push(i)
+  }
+  return(a.reduce(function(acc, val) { return acc * val; }))
+}
+
+var output = computeFactorialOfN(3);
+console.log(output); // --> 6
