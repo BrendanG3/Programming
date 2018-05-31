@@ -1,0 +1,209 @@
+window.onload = function(){
+  canvas = document.createElement("canvas");
+  canvas.width = 640;
+  canvas.height = 480;
+  // adding the canvas to the html
+  document.body.appendChild(canvas);
+  pen = canvas.getContext('2d');
+  // scan for keyboard inputs
+  // document.addEventListener("keydown",keyPush);
+
+  //mouse listners
+  document.addEventListener('mousemove', mouseMoveHandler, false)
+  document.addEventListener('mousedown', mouseClickHandler, false)
+
+  var fps = 30;
+  setInterval(update, 1000/fps);
+  //enemy spawn rate
+  setInterval(spawn, 7000);
+  spaceship = new Image();
+  spaceship.src = "http://www.emoticonswallpapers.com/avatar/games/Kirby-Floating.gif"
+  shotpic = new Image();
+  shotpic.src = 'https://openclipart.org/image/800px/svg_to_png/262404/hp_gold_star.png'
+  enemyicon = new Image();
+  enemyicon.src = 'https://images.clipartuse.com/24ffb401c492e0eb8ad1545503408b0d_yellow-lightening-bolt-clip-art-at-clkercom-vector-clip-art-_640-480.svg'
+  backgroundimg = new Image();
+  backgroundimg.src = 'https://s3.envato.com/files/98115770/590300.jpg'
+  gameover = new Image();
+  gameover.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHW_A3s_xSPsvH9GU4GAH1dnWSv49cKzSiMu7O960BnyvqUubw'
+  bossimg = new Image();
+  bossimg.src = 'https://s3.amazonaws.com/i.seelio.com/88/d0/88d01347a2874210c0722b41037d38999c72.gif'
+
+};
+
+// player stats
+player_x = 100;
+player_y = 100;
+player_speed = 15;
+player_dim = 30;
+player_attack = 'KirbysAdventureSheet1---Edited-1-ConvertImage.gif'
+// enemy stats
+enemy_list = [];
+enemy_speed = 5;
+enemy_dim = 25;
+
+// shot stats
+shots_list = [];
+shot_speed = 7;
+shot_dim = 4;
+
+//lifes
+lifes = 3
+
+//score
+score = 0
+
+// boss stats
+boss_x = 1000
+boss_y = 1000
+boss_dim = 50
+t = 0
+
+// where enemys spawn
+function spawn(){
+  enemy_list.push({x:canvas.width,y:Math.random()*canvas.height})
+}
+
+// updates each frame
+function update(){
+  // crate black background
+  pen.fillStyle = "black";
+  pen.drawImage(backgroundimg,0,0,canvas.width,canvas.height);
+
+  //makes life counter and score
+  pen.font = "30px Comic Sans MS";
+  pen.textBaseline="middle";
+  pen.textAlign="center";
+  pen.fillStyle="lime";
+  pen.fillText('Lifes '+lifes, 70, 50)
+  pen.fillText('Score '+score,80, 75)
+
+  // create our player
+  pen.drawImage(spaceship,
+  player_x - player_dim / 2,
+  player_y - player_dim / 2,
+  player_dim*2,
+  player_dim*2);
+
+
+  // drawing our shots list
+  pen.fillStyle = "lime";
+  for(var s=0; s<shots_list.length;s++){
+    shots_list[s].x += shot_speed;
+    pen.drawImage(shotpic, shots_list[s].x - (shot_dim/2-5),shots_list[s].y - (shot_dim/2 - 12),shot_dim*3,shot_dim*3)
+
+    for(var e=enemy_list.length-1;e>=0;e--){
+      // calculate the distance between the shots and enimies
+      var diff_x = Math.abs(enemy_list[e].x - shots_list[s].x)
+      var diff_y = Math.abs(enemy_list[e].y - shots_list[s].y)
+      var dist = Math.sqrt(diff_x*diff_x+diff_y*diff_y);
+      //detects if a shot hits the enemy
+      if(dist<(shot_dim+enemy_dim)/2){
+        enemy_list.splice(e,1);
+        score += 100
+      }
+    }
+  }
+
+  // create enemies
+  pen.fillStyle = "red"
+  for(var e = 0; e<enemy_list.length;e++){ 
+    enemy_list[e].x -= enemy_speed;
+    pen.drawImage(enemyicon, enemy_list[e].x-enemy_dim/2,enemy_list[e].y-enemy_dim/2,enemy_dim*2,enemy_dim*2);
+    //calculate distance
+    var diff_x = Math.abs(enemy_list[e].x - player_x);
+    var diff_y = Math.abs(enemy_list[e].y - player_y);
+    var dist = Math.sqrt(diff_x*diff_x+diff_y*diff_y);
+    //detect if an enemy hits the player
+    if(dist<(player_dim+enemy_dim)/2){
+      // clear the stats and reset the player if he gets hits
+      shots_list=[]
+      enemy_list=[]
+      player_x = player_y = 100
+      lifes -= 1
+      scores = 0
+      break
+    }
+  }
+  
+  //game over screen
+  if(lifes <= 0){
+    pen.fillStyle='black';
+    pen.drawImage(gameover,0,0,canvas.width,canvas.height);
+    pen.font= "30px Comic Sans MS";
+    pen.textBaseline="middle";
+    pen.textAlign="center";
+    pen.fillStyle="Red";
+    pen.fillText('Game Over', canvas.width/2, canvas.height/2)
+    pen.fillText('Score: '+score, canvas.width/2,canvas.height/2+40)
+}
+// set boundaries
+if(player_y >= canvas.height){
+  shots_list=[]
+  enemy_list=[]
+  player_x = player_y = 100
+  lifes -= 1
+  scores = 0
+}
+if(player_y <= 0){
+  shots_list=[]
+  enemy_list=[]
+  player_x = player_y = 100
+  lifes -= 1
+  scores = 0    
+}
+//move the boss on screen after 3 min
+for(i=0;i>0;i++){
+  t += 1
+}
+if(t > 180){
+  boss_x = 530
+  boss_y = 240
+  //draw boss
+  pen.drawImage(bossimg,boss_x,boss_y,boss_dim,boss_dim)
+}
+
+
+
+
+
+/* extra life
+if(score == 1000){
+  lifes += 1*/
+}
+
+
+
+
+/*
+function keyPush(evt){
+  switch(evt.keyCode){
+    case 32: // spacebar
+      shots_list.push({x:player_x, y: player_y});
+      break;
+    case 37: // left arrow
+      player_x -= player_speed;
+      break;
+    case 38: // up arrow
+      player_y -= player_speed;
+      break;
+    case 39: // right arrow
+      player_x += player_speed;
+      break;
+    case 40: //down arrow
+      player_y += player_speed;
+      break;
+  }
+} */
+
+function mouseMoveHandler(e){
+  player_y = e.clientY
+}
+
+function mouseClickHandler(e){
+  // this checks for the left button
+  if(e.button == 0){
+    shots_list.push({x: player_x, y: player_y})
+
+  }
+}
