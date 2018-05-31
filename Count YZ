@@ -1,0 +1,28 @@
+def countYZ(strings):
+  count = 0
+  strings = (strings+' ')
+  for x in range(len(strings)):
+    if strings[x].isalpha() == False:
+      if strings[x-1] == 'Y':
+        count += 1
+      if strings[x-1] == 'Z':
+        count += 1
+      if strings[x-1] == 'y':
+        count += 1
+      if strings[x-1] == 'z':
+        count += 1
+  return count
+     
+  
+# Test cases. Don't modify  
+print(1,countYZ("fez day"))   # this would be 2
+print(2,countYZ("day fez"))   # this would be 2
+print(3,countYZ("day fyyyz"))   # this would be 2
+print(4,countYZ("day yak"))    # this would be 1
+print(5,countYZ("day:yak")) # 1 
+print(6,countYZ("!!day--yaz!!")) # 2
+print(7,countYZ("yak zak")) # 0
+print(8,countYZ("DAY abc XYZ")) # 2
+print(9,countYZ("aaz yyz my")) # 3
+print(10,countYZ("y2bz")) # 1
+print(11,countYZ("zxyx")) #0
