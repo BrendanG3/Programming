@@ -1,0 +1,15 @@
+function flipPairs(string) {
+  var output = '';
+    for (var x = 0; x < string.length; x+=2) {
+      var p = string.slice(x, x+2);
+      var rp = p.split('').reverse().join('');
+      output += rp;
+    }
+  return output;
+}
+
+var input = 'check out how interesting this problem is, it\'s insanely interesting!';
+
+var output = flipPairs(input);
+
+console.log(output); // --> hcce kuo toh wnietertsni ghtsip orlbmei ,si 't sniasenyli tnreseitgn!
