@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<body background = 'http://www.hillwoodproducts.com/wp-content/uploads/2015/03/wood1.jpg'> 
+<canvas id="clock" width="600" height="400"></canvas>
+  <script>
+  var canvas = document.getElementById("clock");
+  var ctx = canvas.getContext("2d");
+ 
+
+function make_base(){
+  base_image = new Image();
+  base_image.src = 'http://getwallpapers.com/wallpaper/full/d/b/f/184304.jpg';
+  ctx.drawImage(base_image, 0, 0,600,400);
+  ctx.beginPath();
+  ctx.lineWidth=10
+  ctx.moveTo(0,0);
+  ctx.lineTo(0,400);
+  ctx.lineTo(600,400);
+  ctx.lineTo(600,0)
+  ctx.lineTo(0,0)
+  ctx.stroke();
+
+}
+
+
+  ctx.font= "30px Comic Sans MS";
+  ctx.textBaseline="middle";
+  ctx.textAlign="center";
+  ctx.fillStyle="Black";
+  
+setInterval (DrawClock,1000)
+
+function DrawClock(){
+  ctx.clearRect(0,0,180,11)
+  make_base();
+  var now = new Date();
+  var hour = now.getHours();
+  if(hour > 12 || hour == 24){
+    frame = 'pm'
+  }
+  else{
+    frame = 'am'
+  }
+  var minute = now.getMinutes();
+  minute = minute > 9 ? minute : '0' + minute;
+  var second = now.getSeconds();
+  now = String(now).split(" ")
+  a = []
+  a.push(now[0], now[1], now[2], now[3])
+  ctx.fillText(hour,70,100);
+  ctx.fillText(':',100,100)
+  ctx.fillText(minute,130,100)
+  ctx.fillText(frame,180,100)
+  ctx.fillText(a,150, 50)
+}
+  
+  
+
+  </script>
+  </body>
+</html>
