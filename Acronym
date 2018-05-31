@@ -1,0 +1,17 @@
+function acronymMaker(s){
+
+
+    var words = s.split(' ');
+    var acronym= "";
+    index = 0
+    while (index<words.length) {
+            var nextWord = words[index];
+            acronym = acronym + nextWord.charAt(0);
+            index = index + 1 ;
+    }
+    return acronym
+}
+
+output = acronymMaker("Counter Strike Global Offensive");
+
+console.log(output);
