@@ -1,0 +1,23 @@
+
+
+  var text;
+  var favCar = prompt("input a car");
+
+  switch(favCar) {
+    case "BMW":
+      text = "German Car";
+      break;
+    case "Ford":
+      text = "American Car";
+      break;
+    case "Peugeot":
+      text = "French Car";
+      break;
+    default:
+      text = "Unkown car name";
+      break;
+      
+  }
+console.log(text)
+
+
